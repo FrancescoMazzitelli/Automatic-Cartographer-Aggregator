@@ -65,9 +65,6 @@ public class EdgeClusteringService {
                 double length1 = 0;
                 String lineId1 = line1.getID();
                 String lineName1 = "Strada senza nome";
-                if(line1.getName().toString() != null) {
-                    lineName1 = line1.getName().toString();
-                }
 
                 for (AttributeDescriptor attributeDescriptor : attributeDescriptors) {
                     Object attributeValue = line1.getAttribute(attributeDescriptor.getLocalName());
@@ -75,7 +72,7 @@ public class EdgeClusteringService {
                         length1 = Double.parseDouble(attributeValue.toString());
                     }
                     if (attributeDescriptor.getLocalName().toLowerCase().contains("name") || attributeDescriptor.getLocalName().toLowerCase().contains("nome")) {
-                        if(attributeValue.toString() != null) {
+                        if(attributeValue != null) {
                             lineName1 = attributeValue.toString();
                         }
                     }
@@ -107,9 +104,6 @@ public class EdgeClusteringService {
                         double length2 = 0;
                         String lineId2 = line2.getID();
                         String lineName2 = "Strada senza nome";
-                        if(line2.getName().toString() != null) {
-                            lineName2 = line2.getName().toString();
-                        }
 
                         for (AttributeDescriptor attributeDescriptor2 : attributeDescriptors2) {
                             Object attributeValue = line2.getAttribute(attributeDescriptor2.getLocalName());
@@ -117,7 +111,7 @@ public class EdgeClusteringService {
                                 length2 = Double.parseDouble(attributeValue.toString());
                             }
                             if (attributeDescriptor2.getLocalName().toLowerCase().contains("name") || attributeDescriptor2.getLocalName().toLowerCase().contains("nome")) {
-                                if(attributeValue.toString() != null) {
+                                if(attributeValue != null) {
                                     lineName2 = attributeValue.toString();
                                 }
                             }
