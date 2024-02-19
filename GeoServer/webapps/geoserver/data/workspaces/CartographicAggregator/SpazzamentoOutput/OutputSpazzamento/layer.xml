@@ -1,0 +1,17 @@
+<layer>
+  <name>OutputSpazzamento</name>
+  <id>LayerInfoImpl-3371ed5b:18db656fd1f:-7ff5</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--40cf6f64:18d1c2d998e:-7ffc</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-3371ed5b:18db656fd1f:-7ff6</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2024-02-17 09:56:19.941 UTC</dateCreated>
+  <dateModified>2024-02-17 10:44:11.613 UTC</dateModified>
+</layer>

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/plugins/Qredis" >
+        <file>icon.png</file>
+    </qresource>
+    <qresource prefix="/plugins/Qredis" >
+        <file>upload.png</file>
+    </qresource>
+    <qresource prefix="/plugins/Qredis" >
+        <file>compute.png</file>
+    </qresource>
+</RCC>

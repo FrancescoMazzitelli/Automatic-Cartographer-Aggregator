@@ -1,0 +1,27 @@
+<dataStore>
+  <id>DataStoreInfoImpl--1e20cf71:18d5f05e536:-7ff9</id>
+  <name>SpazzamentoInput</name>
+  <type>Redis (GeoMesa)</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--40cf6f64:18d1c2d998e:-7fe0</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="redis.catalog">Sinput</entry>
+    <entry key="redis.pipeline.enabled">false</entry>
+    <entry key="geomesa.stats.enable">true</entry>
+    <entry key="geomesa.query.threads">8</entry>
+    <entry key="geomesa.query.loose-bounding-box">false</entry>
+    <entry key="geomesa.security.auths.force-empty">false</entry>
+    <entry key="geomesa.partition.scan.parallel">false</entry>
+    <entry key="geomesa.query.audit">true</entry>
+    <entry key="namespace">http://localhost:8080/geoserver/aggregator</entry>
+    <entry key="redis.connection.pool.validate">true</entry>
+    <entry key="redis.connection.pool.size">16</entry>
+    <entry key="redis.url">redis://default:cdca493e3e7f2034e92717d4114f69d7bd117764cf42335165e2707706a54a24@localhost:6379</entry>
+  </connectionParameters>
+  <__default>false</__default>
+  <dateCreated>2024-01-31 14:11:57.649 UTC</dateCreated>
+  <dateModified>2024-02-01 18:32:21.83 UTC</dateModified>
+  <disableOnConnFailure>false</disableOnConnFailure>
+</dataStore>

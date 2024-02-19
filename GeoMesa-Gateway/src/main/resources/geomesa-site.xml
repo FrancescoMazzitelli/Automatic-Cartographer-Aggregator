@@ -1,0 +1,6 @@
+<configuration>
+    <property>
+        <name>geomesa.audit.provider</name>
+        <value>noauth</value> <!-- Configura senza AuthorizationProvider -->
+    </property>
+</configuration>

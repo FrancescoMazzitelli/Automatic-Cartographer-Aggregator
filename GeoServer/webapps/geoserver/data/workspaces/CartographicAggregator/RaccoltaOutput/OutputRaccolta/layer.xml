@@ -1,0 +1,17 @@
+<layer>
+  <name>OutputRaccolta</name>
+  <id>LayerInfoImpl-22efc70c:18d881b75e7:-7ff9</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--40cf6f64:18d1c2d998e:-7ffc</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-22efc70c:18d881b75e7:-7ffa</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2024-02-08 09:52:03.633 UTC</dateCreated>
+  <dateModified>2024-02-12 09:48:01.71 UTC</dateModified>
+</layer>
