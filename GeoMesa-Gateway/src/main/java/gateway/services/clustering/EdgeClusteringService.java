@@ -80,14 +80,12 @@ public class EdgeClusteringService {
                         lineId1 = attributeValue.toString();
                     }
                 }
-
                 LineEdge lineEdge1 = new LineEdge(centroid, length1, lineId1, lineName1, geometry1);
                 if(!graph.containsVertex(lineEdge1)) {
                     graph.addVertex(lineEdge1);
                 }
 
                 double maxDistanceThreshold = 0.000000001;
-
                 for (SimpleFeature line2 : featuresList) {
                     boolean areAdjacent;
                     if (line2.getID().equalsIgnoreCase(lineId1)) {
@@ -182,36 +180,22 @@ public class EdgeClusteringService {
         }
     }
 
-
     public static void createAndSavePartitionedGeoJSON(List<LineCluster> partitions, String outputPath) throws IOException, JSONException, FactoryException, TransformException {
         JSONArray features = new JSONArray();
         JSONObject geojsonData = new JSONObject();
         geojsonData.put("type", "FeatureCollection");
 
         for (LineCluster lineCluster : partitions) {
-            List<LineEdge> partitionNodes = lineCluster.getLines();
-            List<Geometry> partitionGeoms = getPartitionGeometries(partitionNodes);
-            Geometry partitionUnion;
-
-            if(partitionGeoms.size() != 0) {
-
-                partitionUnion = unionGeometries(partitionGeoms);
-
-                if (partitionUnion.isEmpty()) {
-                    continue;
-                }
-
-                if (!partitionUnion.isEmpty()) {
+            for(LineEdge line : lineCluster.getLines()) {
+                if (line != null) {
 
                     JSONObject feature = new JSONObject();
                     feature.put("type", "Feature");
 
-                    String streetsString = String.join(",", lineCluster.getLineNames());
-
                     JSONObject properties = new JSONObject();
                     properties.put("Partition_ID", lineCluster.getClusterId());
-                    properties.put("Streets", streetsString);
-                    properties.put("Length", lineCluster.getTotalLength());
+                    properties.put("Street", line.getLineName());
+                    properties.put("Length", line.getWeight());
 
                     feature.put("properties", properties);
 
@@ -219,10 +203,7 @@ public class EdgeClusteringService {
                     JSONArray coordinates = new JSONArray();
 
 
-                    for (int i = 0; i < partitionUnion.getNumGeometries(); i++) {
-                        Geometry geometry = partitionUnion.getGeometryN(i);
-                        addLineCoordinates(geometry, coordinates);
-                    }
+                    addLineCoordinates(line.getLineString(), coordinates);
 
 
                     lineJson.put("type", "MultiLineString");

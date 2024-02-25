@@ -170,57 +170,50 @@ public class NodeClusteringService {
         geojsonData.put("type", "FeatureCollection");
 
         for (NodeCluster nodeCluster : partitions) {
-            List<PolygonNode> partitionNodes = nodeCluster.getNodes();
-            List<Geometry> partitionGeoms = getPartitionGeometries(partitionNodes);
-
-            Geometry partitionUnion = unionGeometries(partitionGeoms);
-
-            if (partitionUnion.isEmpty()) {
-                continue;
-            }
-
-            if (!partitionUnion.isEmpty()) {
-                double perimeter = partitionUnion.getLength();
-                double area = partitionUnion.getArea();
+            for(PolygonNode node : nodeCluster.getNodes()) {
+                if (node != null) {
+                    double perimeter = node.getShapeLeng();
+                    double area = node.getShapeArea();
 
 
-                JSONObject feature = new JSONObject();
-                feature.put("type", "Feature");
+                    JSONObject feature = new JSONObject();
+                    feature.put("type", "Feature");
 
-                JSONObject properties = new JSONObject();
-                properties.put("Partition_ID", nodeCluster.getClusterId());
-                properties.put("Families", nodeCluster.getTotalFamilies());
-                
-                properties.put("Perimeter", perimeter);
-                properties.put("Area", area);
+                    JSONObject properties = new JSONObject();
+                    properties.put("Partition_ID", nodeCluster.getClusterId());
+                    properties.put("Families", nodeWeights.get(node));
 
-                feature.put("properties", properties);
+                    properties.put("Perimeter", perimeter);
+                    properties.put("Area", area);
 
-
-                JSONObject polygonJson = new JSONObject();
-                JSONArray coordinates = new JSONArray();
+                    feature.put("properties", properties);
 
 
-                if (partitionUnion instanceof Polygon) {
-                    addPolygonCoordinates((Polygon) partitionUnion, coordinates);
-                } else if (partitionUnion instanceof MultiPolygon) {
-                    MultiPolygon multiPolygon = (MultiPolygon) partitionUnion;
-                    for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
-                        Geometry geometry = multiPolygon.getGeometryN(i);
-                        if (geometry instanceof Polygon) {
-                            addPolygonCoordinates((Polygon) geometry, coordinates);
-                        } else {
-                            throw new IllegalArgumentException("Unsupported geometry type: " + geometry.getGeometryType());
+                    JSONObject polygonJson = new JSONObject();
+                    JSONArray coordinates = new JSONArray();
+
+
+                    if (node.getAssociatedPolygon() instanceof Polygon) {
+                        addPolygonCoordinates((Polygon) node.getAssociatedPolygon(), coordinates);
+                    } else if (node.getAssociatedPolygon() instanceof MultiPolygon) {
+                        MultiPolygon multiPolygon = (MultiPolygon) node.getAssociatedPolygon();
+                        for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
+                            Geometry geometry = multiPolygon.getGeometryN(i);
+                            if (geometry instanceof Polygon) {
+                                addPolygonCoordinates((Polygon) geometry, coordinates);
+                            } else {
+                                throw new IllegalArgumentException("Unsupported geometry type: " + geometry.getGeometryType());
+                            }
                         }
                     }
+
+
+                    polygonJson.put("type", "Polygon");
+                    polygonJson.put("coordinates", coordinates);
+                    feature.put("geometry", polygonJson);
+
+                    features.put(feature);
                 }
-
-
-                polygonJson.put("type", "Polygon");
-                polygonJson.put("coordinates", coordinates);
-                feature.put("geometry", polygonJson);
-
-                features.put(feature);
             }
         }
 
