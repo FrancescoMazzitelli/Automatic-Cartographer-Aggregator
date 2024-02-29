@@ -1,0 +1,8 @@
+FROM openjdk:17-jdk
+
+COPY GeoMesa-Gateway/target/GeoMesaGateway-v0.2.2.jar /app/gateway.jar
+COPY GeoMesa-Gateway/target/classes/application.properties /app/application-config.properties
+
+EXPOSE 8000
+
+ENTRYPOINT ["java", "-jar", "/app/gateway.jar", "--spring.config.location=file:/app/application-config.properties"]

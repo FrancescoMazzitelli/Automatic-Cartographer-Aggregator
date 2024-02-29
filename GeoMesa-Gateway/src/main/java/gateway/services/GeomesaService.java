@@ -23,11 +23,14 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import java.io.IOException;
 import java.util.*;
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GeomesaService {
 
     private static String geomFlag;
+    private static JSONObject crsFile;
     private GeomesaService(){
 
     }
@@ -93,7 +96,8 @@ public class GeomesaService {
     }
 
 
-    public static List<SimpleFeature> createSimpleFeatures(SimpleFeatureType type, JSONObject featureJson) throws JSONException, FactoryException, TransformException, IOException {
+    public static List<SimpleFeature> createSimpleFeatures(SimpleFeatureType type, JSONObject featureJson, JSONObject crs) throws JSONException, FactoryException, TransformException, IOException {
+        crsFile = crs;
         List<SimpleFeature> featureList = new ArrayList<>();
 
         // Estrai la lista di features dal FeatureCollection
@@ -296,9 +300,19 @@ public class GeomesaService {
     }
 
 
-    public static double[] cartesianToGeographic(double x, double y, double z) throws FactoryException, TransformException, IOException {
+    public static double[] cartesianToGeographic(double x, double y, double z) throws FactoryException, TransformException, JSONException {
         // Definisci il sistema di riferimento di origine (assumendo che sia lo stesso per le coordinate cartesiane)
-        CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:32633"); // Sostituisci XXXX con il codice EPSG corretto
+        JSONObject properties = crsFile.getJSONObject("properties");
+
+        Pattern pattern = Pattern.compile("EPSG::(\\d+)");
+        Matcher matcher = pattern.matcher(properties.toString());
+
+        String crs = null;
+        if (matcher.find()) {
+            crs = matcher.group(1);
+        }
+
+        CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:"+crs); // Sostituisci XXXX con il codice EPSG corretto
         CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326");
         // Costruisci un oggetto Geometry nel sistema di riferimento di origine
         PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);

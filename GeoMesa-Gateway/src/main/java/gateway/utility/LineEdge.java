@@ -10,13 +10,15 @@ public class LineEdge extends Point {
     private String lineName;
     private Geometry lineString;
     private double weight;
+    private double families;
     private Point centroid;
 
-    public LineEdge(Point centroid, double weight, String lineId, String lineName, Geometry lineString) {
+    public LineEdge(Point centroid, double weight, double families, String lineId, String lineName, Geometry lineString) {
         super(createCoordinateSequence(centroid.getCoordinate()), centroid.getFactory());
         this.lineId = lineId;
         this.lineName = lineName;
         this.weight = weight;
+        this.families = families;
         this.lineString = lineString;
     }
 
@@ -42,6 +44,10 @@ public class LineEdge extends Point {
         return weight;
     }
 
+    public double getFamilies() {
+        return families;
+    }
+
     @Override
     public Point getCentroid() {
         return centroid;
@@ -61,6 +67,10 @@ public class LineEdge extends Point {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void setFamilies(double families) {
+        this.families = families;
     }
 
     public void setCentroid(Point centroid) {

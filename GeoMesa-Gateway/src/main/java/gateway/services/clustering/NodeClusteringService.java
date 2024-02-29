@@ -33,12 +33,16 @@ import smile.math.matrix.Matrix;
 public class NodeClusteringService {
 
     private static Map<PolygonNode, Double> nodeWeights;
+    private static JSONObject crsFile = null;
 
 
     public static Graph<PolygonNode, DefaultWeightedEdge> convertGeoJSONToGraph(String filePath) throws IOException {
         FeatureJSON featureJSON = new FeatureJSON();
         FileReader reader = new FileReader(filePath);
         BufferedReader br = new BufferedReader(reader);
+
+        FileReader readerCRS = new FileReader(filePath);
+        BufferedReader brCRS = new BufferedReader(readerCRS);
 
         Graph<PolygonNode, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         nodeWeights = new HashMap<>();
@@ -51,6 +55,10 @@ public class NodeClusteringService {
                 SimpleFeature feature = features.next();
                 featuresList.add(feature);
             }
+
+            JSONObject json = new JSONObject(brCRS.readLine());
+            if(json.getJSONObject("crs").toString() != null)
+                crsFile = json.getJSONObject("crs");
 
             for(SimpleFeature polygon1 : featuresList) {
                 SimpleFeatureType featureType = polygon1.getFeatureType();
@@ -125,6 +133,8 @@ public class NodeClusteringService {
                     }
                 }
             }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         } finally {
             reader.close();
         }
@@ -164,17 +174,17 @@ public class NodeClusteringService {
     }
 
 
-    public static void createAndSavePartitionedGeoJSON(List<NodeCluster> partitions, String outputPath) throws IOException, JSONException, FactoryException, TransformException {
+    public static void createAndSavePartitionedGeoJSON(List<NodeCluster> partitions, String outputPath) throws IOException, JSONException {
         JSONArray features = new JSONArray();
         JSONObject geojsonData = new JSONObject();
         geojsonData.put("type", "FeatureCollection");
+        String flag;
 
         for (NodeCluster nodeCluster : partitions) {
             for(PolygonNode node : nodeCluster.getNodes()) {
                 if (node != null) {
                     double perimeter = node.getShapeLeng();
                     double area = node.getShapeArea();
-
 
                     JSONObject feature = new JSONObject();
                     feature.put("type", "Feature");
@@ -207,7 +217,6 @@ public class NodeClusteringService {
                         }
                     }
 
-
                     polygonJson.put("type", "Polygon");
                     polygonJson.put("coordinates", coordinates);
                     feature.put("geometry", polygonJson);
@@ -223,7 +232,13 @@ public class NodeClusteringService {
         crsName.put("name", "urn:ogc:def:crs:EPSG::32633");
         crs.put("type", "name");
         crs.put("properties", crsName);
-        geojsonData.put("crs", crs);
+
+        if(crsFile != null)
+            geojsonData.put("crs", crsFile);
+        else {
+            geojsonData.put("crs", crs);
+            crsFile = crs;
+        }
 
         try (FileWriter writer = new FileWriter(outputPath)) {
             geojsonData.write(writer);
@@ -256,6 +271,33 @@ public class NodeClusteringService {
             }
 
             coordinates.put(innerRing);
+        }
+    }
+
+    private static void addSingleLineCoordinates(LineString lineString, JSONArray coordinates) throws JSONException {
+        // Aggiungi le coordinate per il LineString
+        JSONArray lineCoordinates = new JSONArray();
+        Coordinate[] lineStringCoordinates = lineString.getCoordinates();
+
+        for (Coordinate c : lineStringCoordinates) {
+            JSONArray pair = new JSONArray();
+            pair.put(c.getX());
+            pair.put(c.getY());
+            lineCoordinates.put(pair);
+        }
+
+        coordinates.put(lineCoordinates);
+    }
+
+    private static void addLineCoordinates(Geometry line, JSONArray coordinates) throws JSONException {
+        if (line instanceof MultiLineString) {
+            MultiLineString multiLineString = (MultiLineString) line;
+            for (int i = 0; i < multiLineString.getNumGeometries(); i++) {
+                LineString lineString = (LineString) multiLineString.getGeometryN(i);
+                addSingleLineCoordinates(lineString, coordinates);
+            }
+        } else if (line instanceof LineString) {
+            addSingleLineCoordinates((LineString) line, coordinates);
         }
     }
 
@@ -435,6 +477,10 @@ public class NodeClusteringService {
         }
 
         return clusters;
+    }
+
+    public static JSONObject getCrsFile(){
+        return crsFile;
     }
 
 }

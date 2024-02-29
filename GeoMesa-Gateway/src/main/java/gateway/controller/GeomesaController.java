@@ -106,7 +106,7 @@ public class GeomesaController {
             //featureType2.getDescriptor("geom").getUserData().put("precision", "6");
 
             // Creazione della lista di SimpleFeature
-            List<SimpleFeature> features2 = GeomesaService.createSimpleFeatures(featureType2, json2);
+            List<SimpleFeature> features2 = GeomesaService.createSimpleFeatures(featureType2, json2, graphController.getCRS());
 
             // Creazione dello schema del datastore
             dataStore2.createSchema(featureType2);
@@ -117,9 +117,13 @@ public class GeomesaController {
 
 
             for (SimpleFeature feature2 : features2) {
-                SimpleFeature toWrite2 = writer2.next();
-                toWrite2.setAttributes(feature2.getAttributes());
-                writer2.write();
+                if(feature2 != null) {
+                    SimpleFeature toWrite2 = writer2.next();
+                    toWrite2.setAttributes(feature2.getAttributes());
+                    if(toWrite2 != null) {
+                        writer2.write();
+                    }
+                }
             }
             writer2.close();
         }
@@ -156,7 +160,7 @@ public class GeomesaController {
             //featureType2.getDescriptor("geom").getUserData().put("precision", "6");
 
             // Creazione della lista di SimpleFeature
-            List<SimpleFeature> features2 = GeomesaService.createSimpleFeatures(featureType2, json2);
+            List<SimpleFeature> features2 = GeomesaService.createSimpleFeatures(featureType2, json2, graphController.getCRS());
 
             // Creazione dello schema del datastore
             dataStore2.createSchema(featureType2);
@@ -167,9 +171,13 @@ public class GeomesaController {
 
 
             for (SimpleFeature feature2 : features2) {
-                SimpleFeature toWrite2 = writer2.next();
-                toWrite2.setAttributes(feature2.getAttributes());
-                writer2.write();
+                if(feature2 != null) {
+                    SimpleFeature toWrite2 = writer2.next();
+                    toWrite2.setAttributes(feature2.getAttributes());
+                    if(toWrite2 != null) {
+                        writer2.write();
+                    }
+                }
             }
             writer2.close();
         }

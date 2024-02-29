@@ -1,0 +1,18 @@
+FROM debian:bullseye-slim
+
+# Installa OpenJDK 17 e Jetty
+RUN apt-get update && apt-get install -y openjdk-17-jdk jetty9
+
+# Copia GeoServer
+COPY GeoServer /app/geoserver
+
+EXPOSE 8080
+
+# Copia lo script di avvio personalizzato
+COPY entrypoint.sh /app/entrypoint.sh
+
+# Imposta i permessi di esecuzione per lo script
+RUN chmod +x /app/entrypoint.sh
+
+# Avvia lo script di avvio personalizzato come entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]

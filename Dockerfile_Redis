@@ -1,0 +1,8 @@
+# Usa l'immagine ufficiale di Redis
+FROM redis:latest
+
+# Esponi la porta di default di Redis
+EXPOSE 6379
+
+# Imposta lo script come comando di default
+ENTRYPOINT ["redis-server"]

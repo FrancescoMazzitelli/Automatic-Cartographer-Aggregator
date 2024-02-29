@@ -9,14 +9,14 @@ import java.util.List;
 public class LineCluster {
 
     private int clusterId;
-    private double totalLength;
+    private double totalWeight;
     private List<LineEdge> lines;
     private List<String> lineNames;
 
 
-    public LineCluster(int clusterId, double totalLength, List<LineEdge> lines) {
+    public LineCluster(int clusterId, double totalWeight, List<LineEdge> lines) {
         this.clusterId = clusterId;
-        this.totalLength = totalLength;
+        this.totalWeight = totalWeight;
         this.lines = lines;
         this.lineNames = extractLineNames();
     }
@@ -33,8 +33,8 @@ public class LineCluster {
         return clusterId;
     }
 
-    public double getTotalLength() {
-        return totalLength;
+    public double getTotalWeight() {
+        return totalWeight;
     }
 
 
@@ -50,8 +50,8 @@ public class LineCluster {
         this.clusterId = clusterId;
     }
 
-    public void setTotalLength(double totalLength) {
-        this.totalLength = totalLength;
+    public void setTtotalWight(double totalWeight) {
+        this.totalWeight = totalWeight;
     }
 
     public void setLines(List<LineEdge> lines) {
