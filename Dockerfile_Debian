@@ -11,7 +11,7 @@ RUN sudo apt-get install redis-server -y
 WORKDIR /home
 
 COPY GeoServer /home/geoserver
-COPY GeoMesa-Gateway/target/GeoMesaGateway-v0.2.2.jar /home/gateway/geomesa-gateway.jar
+COPY GeoMesa-Gateway/target/GeoMesaGateway-v0.2.3.jar /home/gateway/geomesa-gateway.jar
 COPY GeoMesa-Gateway/target/classes/application.properties /home/gateway/application.properties
 
 EXPOSE 6379 8000 8080
