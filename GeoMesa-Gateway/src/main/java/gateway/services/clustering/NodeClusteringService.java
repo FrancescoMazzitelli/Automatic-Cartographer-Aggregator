@@ -73,7 +73,7 @@ public class NodeClusteringService {
 
                 for (AttributeDescriptor attributeDescriptor : attributeDescriptors) {
                     Object attributeValue = polygon1.getAttribute(attributeDescriptor.getLocalName());
-                    if (attributeDescriptor.getLocalName().toLowerCase().contains("fam")) {
+                    if (attributeDescriptor.getLocalName().toLowerCase().contains("fam") || attributeDescriptor.getLocalName().toLowerCase().contains("uten")) {
                         famiglie1 = Double.parseDouble(attributeValue.toString());
                     }
                     if (attributeDescriptor.getLocalName().toLowerCase().contains("partition")) {
@@ -107,7 +107,7 @@ public class NodeClusteringService {
 
                             for (AttributeDescriptor attributeDescriptor2 : attributeDescriptors2) {
                                 Object attributeValue = polygon2.getAttribute(attributeDescriptor2.getLocalName());
-                                if (attributeDescriptor2.getLocalName().toLowerCase().contains("fam")) {
+                                if (attributeDescriptor2.getLocalName().toLowerCase().contains("fam") || attributeDescriptor2.getLocalName().toLowerCase().contains("uten")) {
                                     famiglie2 = Double.parseDouble(attributeValue.toString());
                                 }
                                 if (attributeDescriptor2.getLocalName().toLowerCase().contains("partition")) {
@@ -346,6 +346,15 @@ public class NodeClusteringService {
             }
         }
 
+        for (PolygonNode node : graph.vertexSet()) {
+            if (!visited.contains(node)) {
+                List<PolygonNode> singleNodeCluster = new ArrayList<>();
+                singleNodeCluster.add(node);
+                nodeClusters.add(new NodeCluster(clusterIdCounter++, nodeWeights.get(node), singleNodeCluster));
+            }
+        }
+
+
         return nodeClusters;
     }
 
@@ -364,6 +373,8 @@ public class NodeClusteringService {
                     visited.add(currentNode);
                     queue.addAll(getUnvisitedNeighbors(graph, currentNode, visited));
                 } else {
+                    // Rimuovi l'ultimo nodo da visited, poichè non inserito nel cluster
+                    visited.remove(currentNode);
                     // Inizia un nuovo cluster quando la soglia è superata
                     break;
                 }

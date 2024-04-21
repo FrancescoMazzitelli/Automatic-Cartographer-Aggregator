@@ -210,10 +210,20 @@ public class EdgeClusteringService {
                     JSONObject properties = new JSONObject();
                     properties.put("Partition_ID", lineCluster.getClusterId());
                     properties.put("Street", line.getLineName());
-                    if (line.getWeight() != 0)
+
+                    if (line.getWeight() == 0) {
+                        properties.put("Length", 0);
+                    }
+                    else{
                         properties.put("Length", line.getWeight());
-                    if(line.getFamilies() != 0)
+                    }
+
+                    if (line.getFamilies() == 0) {
+                        properties.put("Families", 0);
+                    }
+                    else{
                         properties.put("Families", line.getFamilies());
+                    }
 
                     feature.put("properties", properties);
 

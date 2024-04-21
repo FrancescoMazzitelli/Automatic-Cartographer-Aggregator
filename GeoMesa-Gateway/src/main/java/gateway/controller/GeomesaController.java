@@ -22,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class GeomesaController {
@@ -40,10 +41,9 @@ public class GeomesaController {
         dirs[1] = dir2;
 
         for(File dir : dirs){
-            if(dir.listFiles().length > 0){
-                for(File toDelete : dir.listFiles()){
-                    toDelete.delete();
-                }
+            Objects.requireNonNull(dir.listFiles());
+            for (File toDelete : Objects.requireNonNull(dir.listFiles())) {
+                toDelete.delete();
             }
         }
     }
